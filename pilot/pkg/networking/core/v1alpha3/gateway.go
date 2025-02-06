@@ -322,7 +322,7 @@ func (configgen *ConfigGeneratorImpl) buildGatewayListeners(builder *ListenerBui
 		}
 		listeners = append(listeners, ml.mutable.Listener)
 
-		if features.EnableRDSCaching {
+		if features.EnableLDSCaching {
 			listenerCache := &ListenerCache{
 				ListenerName:    ml.mutable.Listener.Name,
 				Gateways:        gatewaysByListenerName[ml.mutable.Listener.Name],
