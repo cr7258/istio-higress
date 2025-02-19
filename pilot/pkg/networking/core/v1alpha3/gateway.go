@@ -160,7 +160,7 @@ func (configgen *ConfigGeneratorImpl) buildGatewayListeners(builder *ListenerBui
 	gatewaysByListenerName := map[string][]*config.Config{}
 	hit, miss := 0, 0
 
-	log.Infof("======================= Disable WasmPlugin Cache v12 ==================================")
+	log.Infof("======================= Disable WasmPlugin Cache v13 ==================================")
 	for _, plugins := range req.Push.WasmPlugins(builder.node) {
 		for _, plugin := range plugins {
 			log.Infof("WasmPlugin: %v/%v", plugin.Namespace, plugin.Name)
@@ -273,7 +273,7 @@ func (configgen *ConfigGeneratorImpl) buildGatewayListeners(builder *ListenerBui
 					}
 					listeners = append(listeners, cachedListener)
 					hit++
-					log.Infof("xxxxxxxxxxxxxxxxxxxxxxxx listenerCache: %v", listenerCache)
+					log.Infof("xxxxxxxxxxxxxxxxxxxxxxxx listenerCache xxxxxxxxxx ListenerName: %v, Gateways: %v, EnvoyFilterKeys: %v, WasmPlugins: %v", listenerCache.ListenerName, listenerCache.Gateways, listenerCache.EnvoyFilterKeys, listenerCache.WasmPlugins)
 					continue
 				} else {
 					miss++
