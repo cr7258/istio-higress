@@ -317,7 +317,13 @@ func (l *lruCache[K]) Clear(configs sets.Set[ConfigKey]) {
 		delete(l.configIndex, ckey.HashCode())
 		for key := range referenced {
 			log.Infof("============= Clearing cache for key %v", key)
+			log.Infof("============= Before l.store.Len(): %v", l.store.Len())
+			log.Infof("============= Before l.store.Keys(): %v", l.store.Keys())
+			log.Infof("============= Before l.store.Values(): %v", l.store.Values())
 			l.store.Remove(key)
+			log.Infof("============= After l.store.Len(): %v", l.store.Len())
+			log.Infof("============= After l.store.Keys(): %v", l.store.Keys())
+			log.Infof("============= After l.store.Values(): %v", l.store.Values())
 		}
 	}
 	size(l.store.Len())
