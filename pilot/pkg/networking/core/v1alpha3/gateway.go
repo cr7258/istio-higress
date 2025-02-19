@@ -160,7 +160,7 @@ func (configgen *ConfigGeneratorImpl) buildGatewayListeners(builder *ListenerBui
 	gatewaysByListenerName := map[string][]*config.Config{}
 	hit, miss := 0, 0
 
-	log.Infof("======================= Disable WasmPlugin Cache 2 ==================================")
+	log.Infof("======================= Disable WasmPlugin Cache v5 ==================================")
 	for _, plugins := range req.Push.WasmPlugins(builder.node) {
 		for _, plugin := range plugins {
 			log.Infof("WasmPlugin: %v/%v", plugin.Namespace, plugin.Name)
@@ -256,6 +256,7 @@ func (configgen *ConfigGeneratorImpl) buildGatewayListeners(builder *ListenerBui
 			}
 
 			if !features.EnableUnsafeAssertions && features.EnableLDSCaching {
+				log.Infof("======================== LDS cache is enabled ================================")
 				listenerCache := &ListenerCache{
 					ListenerName:    lname,
 					Gateways:        gateways,
@@ -276,6 +277,8 @@ func (configgen *ConfigGeneratorImpl) buildGatewayListeners(builder *ListenerBui
 				} else {
 					miss++
 				}
+			} else {
+				log.Infof("xxxxxxxxxxxxxxxxxxxxxxxx LDS cache is not enabled xxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 			}
 			gatewaysByListenerName[lname] = gateways
 
@@ -329,6 +332,7 @@ func (configgen *ConfigGeneratorImpl) buildGatewayListeners(builder *ListenerBui
 		listeners = append(listeners, ml.mutable.Listener)
 
 		if features.EnableLDSCaching {
+			log.Infof("================== LDS cahce is enabled ==================")
 			listenerCache := &ListenerCache{
 				ListenerName:    ml.mutable.Listener.Name,
 				Gateways:        gatewaysByListenerName[ml.mutable.Listener.Name],
@@ -340,6 +344,8 @@ func (configgen *ConfigGeneratorImpl) buildGatewayListeners(builder *ListenerBui
 				Resource: protoconv.MessageToAny(ml.mutable.Listener),
 			}
 			configgen.Cache.Add(listenerCache, req, resource)
+		} else {
+			log.Infof("xxxxxxxxxxxxxxxxxxxxxx LDS cahce is not enabled xxxxxxxxxxxxxxxxxxxxxxx")
 		}
 	}
 	// We'll try to return any listeners we successfully marshaled; if we have none, we'll emit the error we built up
