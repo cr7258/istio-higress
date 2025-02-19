@@ -312,7 +312,7 @@ func (l *lruCache[K]) Clear(configs sets.Set[ConfigKey]) {
 	}()
 	for ckey := range configs {
 		referenced := l.configIndex[ckey.HashCode()]
-		log.Infof("============= Clearing cache for %v", ckey)
+		log.Infof("============= Clearing cache for kind: %v, namespace: %v, name: %v", ckey.Kind, ckey.Namespace, ckey.Name)
 		log.Infof("============= Referenced: %v", referenced)
 		delete(l.configIndex, ckey.HashCode())
 		for key := range referenced {
