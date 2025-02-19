@@ -112,6 +112,7 @@ func (configgen *ConfigGeneratorImpl) BuildListeners(node *model.Proxy,
 	case model.Router:
 		builder, cacheStats = configgen.buildGatewayListeners(builder, req, efKeys)
 	}
+	log.Infof("============== CacheStats: %v, hit: %v, miss: %v", cacheStats, cacheStats.hits, cacheStats.miss)
 
 	var l []*listener.Listener
 	// Because the EnvoyFilter still needs to be patched before the final LDS data is generated,

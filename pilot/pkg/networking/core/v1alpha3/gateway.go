@@ -265,13 +265,13 @@ func (configgen *ConfigGeneratorImpl) buildGatewayListeners(builder *ListenerBui
 				}
 				cachedResource := configgen.Cache.Get(listenerCache)
 				if cachedResource != nil {
-					cachedListner, err := protoconv.UnmarshalAny[listener.Listener](cachedResource.Resource)
+					cachedListener, err := protoconv.UnmarshalAny[listener.Listener](cachedResource.Resource)
 					if err != nil {
 						errs = multierror.Append(errs, fmt.Errorf("unmarshal lds cache resource to listener %s failed: %v", lname, err))
 						miss++
 						continue
 					}
-					listeners = append(listeners, cachedListner)
+					listeners = append(listeners, cachedListener)
 					hit++
 					continue
 				} else {
