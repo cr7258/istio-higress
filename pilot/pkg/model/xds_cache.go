@@ -187,8 +187,8 @@ func (x XdsCacheImpl) Clear(s sets.Set[ConfigKey]) {
 	hasVirtualService := HasConfigsOfKind(s, kind.VirtualService)
 	hasHTTPRoute := HasConfigsOfKind(s, kind.HTTPRoute)
 	hasSecret := HasConfigsOfKind(s, kind.Secret)
-	hasGateway := HasConfigsOfKind(s, kind.Gateway)
-	hasWasmPlugin := HasConfigsOfKind(s, kind.WasmPlugin)
+	//hasGateway := HasConfigsOfKind(s, kind.Gateway)
+	//hasWasmPlugin := HasConfigsOfKind(s, kind.WasmPlugin)
 
 	if hasDestiantionRule || hasServiceEntry || hasEnvoyFilter {
 		x.cds.Clear(s)
@@ -206,9 +206,11 @@ func (x XdsCacheImpl) Clear(s sets.Set[ConfigKey]) {
 	if hasSecret {
 		x.sds.Clear(s)
 	}
-	if hasGateway || hasEnvoyFilter || hasWasmPlugin {
-		x.lds.Clear(s)
-	}
+	//if hasGateway || hasEnvoyFilter || hasWasmPlugin {
+	//	x.lds.Clear(s)
+	//}
+	log.Infof("================= clear cache for %s =======================", s)
+	x.lds.Clear(s)
 }
 
 func (x XdsCacheImpl) ClearAll() {

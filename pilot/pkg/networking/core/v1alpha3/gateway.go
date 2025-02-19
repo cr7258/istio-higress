@@ -160,24 +160,24 @@ func (configgen *ConfigGeneratorImpl) buildGatewayListeners(builder *ListenerBui
 	gatewaysByListenerName := map[string][]*config.Config{}
 	hit, miss := 0, 0
 
-	log.Infof("======================= Disable WasmPlugin Cache v5 ==================================")
+	log.Infof("======================= Disable WasmPlugin Cache v6 ==================================")
 	for _, plugins := range req.Push.WasmPlugins(builder.node) {
 		for _, plugin := range plugins {
 			log.Infof("WasmPlugin: %v/%v", plugin.Namespace, plugin.Name)
 		}
 	}
-	//var listenerWasmPlugins []*config.Config
-	//for _, plugins := range req.Push.WasmPlugins(builder.node) {
-	//	for _, plugin := range plugins {
-	//		listenerWasmPlugins = append(listenerWasmPlugins, &config.Config{
-	//			Meta: config.Meta{
-	//				GroupVersionKind: gvk.WasmPlugin,
-	//				Name:             plugin.Name,
-	//				Namespace:        plugin.Namespace,
-	//			},
-	//		})
-	//	}
-	//}
+	var listenerWasmPlugins []*config.Config
+	for _, plugins := range req.Push.WasmPlugins(builder.node) {
+		for _, plugin := range plugins {
+			listenerWasmPlugins = append(listenerWasmPlugins, &config.Config{
+				Meta: config.Meta{
+					GroupVersionKind: gvk.WasmPlugin,
+					Name:             plugin.Name,
+					Namespace:        plugin.Namespace,
+				},
+			})
+		}
+	}
 	for _, port := range mergedGateway.ServerPorts {
 		// Skip ports we cannot bind to. Note that MergeGateways will already translate Service port to
 		// targetPort, which handles the common case of exposing ports like 80 and 443 but listening on
@@ -261,7 +261,7 @@ func (configgen *ConfigGeneratorImpl) buildGatewayListeners(builder *ListenerBui
 					ListenerName:    lname,
 					Gateways:        gateways,
 					EnvoyFilterKeys: efKeys,
-					//WasmPlugins:     listenerWasmPlugins,
+					WasmPlugins:     listenerWasmPlugins,
 				}
 				cachedResource := configgen.Cache.Get(listenerCache)
 				if cachedResource != nil {
@@ -337,7 +337,7 @@ func (configgen *ConfigGeneratorImpl) buildGatewayListeners(builder *ListenerBui
 				ListenerName:    ml.mutable.Listener.Name,
 				Gateways:        gatewaysByListenerName[ml.mutable.Listener.Name],
 				EnvoyFilterKeys: efKeys,
-				//WasmPlugins:     listenerWasmPlugins,
+				WasmPlugins:     listenerWasmPlugins,
 			}
 			resource := &discovery.Resource{
 				Name:     ml.mutable.Listener.Name,
