@@ -15,6 +15,7 @@
 package v1alpha3
 
 import (
+	"istio.io/istio/pkg/log"
 	"strings"
 
 	"istio.io/istio/pilot/pkg/model"
@@ -43,17 +44,23 @@ func (l *ListenerCache) Key() any {
 	h.Write([]byte(l.ListenerName))
 	h.Write(Separator)
 
+	// Prepare a human-readable key string
+	var readableKey string
+	readableKey += l.ListenerName + string(Separator)
+
 	for _, gw := range l.Gateways {
 		h.Write([]byte(gw.Name))
 		h.Write(Slash)
 		h.Write([]byte(gw.Namespace))
 		h.Write(Separator)
+		readableKey += gw.Name + "/" + gw.Namespace + string(Separator)
 	}
 	h.Write(Separator)
 
 	for _, efk := range l.EnvoyFilterKeys {
 		h.Write([]byte(efk))
 		h.Write(Separator)
+		readableKey += efk + string(Separator)
 	}
 	h.Write(Separator)
 
@@ -62,9 +69,14 @@ func (l *ListenerCache) Key() any {
 		h.Write(Slash)
 		h.Write([]byte(plugin.Namespace))
 		h.Write(Separator)
+		readableKey += plugin.Name + "/" + plugin.Namespace + string(Separator)
 	}
 	h.Write(Separator)
 
+	// Print the human-readable key and its corresponding hash
+	log.Infof("====================== hash: %v,  Human-readable key: %v", h.Sum64(), readableKey)
+
+	// Return the original hash value
 	return h.Sum64()
 }
 
