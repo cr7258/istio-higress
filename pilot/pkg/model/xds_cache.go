@@ -140,6 +140,7 @@ func (x XdsCacheImpl) Add(entry XdsCacheEntry, pushRequest *PushRequest, value *
 		x.eds.Add(key, entry, pushRequest, value)
 	case LDSType:
 		key := k.(uint64)
+		log.Infof("=============== Add key: %v", key)
 		x.lds.Add(key, entry, pushRequest, value)
 	case SDSType:
 		key := k.(string)
