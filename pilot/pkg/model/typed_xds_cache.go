@@ -264,10 +264,12 @@ func (l *lruCache[K]) Add(k K, entry dependents, pushReq *PushRequest, value *di
 	dependentConfigs := entry.DependentConfigs()
 	toWrite := cacheValue{value: value, token: token, dependentConfigs: dependentConfigs}
 	log.Infof("=============== toWrite: %v", toWrite)
-	log.Infof("=============== k: %v", k)
+	log.Infof("=============== Add k: %v", k)
 	log.Infof("=============== value: %v", value)
 	log.Infof("=============== dependentConfigs: %v", dependentConfigs)
+	log.Infof("============ Before Add: %v", l.store.Keys())
 	l.store.Add(k, toWrite)
+	log.Infof("============ After Add: %v", l.store.Keys())
 	l.token = token
 	l.updateConfigIndex(k, dependentConfigs)
 
