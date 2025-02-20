@@ -248,12 +248,14 @@ func (l *lruCache[K]) Add(k K, entry dependents, pushReq *PushRequest, value *di
 	if token < l.token {
 		// entry may be stale, we need to drop it. This can happen when the cache is invalidated
 		// after we call Get.
+		log.Infof("=========== token < l.token, %v, %v", token, l.token)
 		return
 	}
 	cur, f := l.store.Get(k)
 	if f {
 		// This is the stale or same resource
 		if token <= cur.token {
+			log.Infof("=========== token <= cur.token, %v, %v", token, cur.token)
 			return
 		}
 		if l.enableAssertions {
